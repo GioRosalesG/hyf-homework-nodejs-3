@@ -1,3 +1,4 @@
+const { response } = require("express");
 const express = require("express");
 const app = express();
 
@@ -24,10 +25,21 @@ app.post('/user', (req, res) => {
 });
 
 app.get('/user/:userId', (req, res) => {
-    const user = {id: users[Number(req.params.userId)]}
+  const user = {id: users[Number(req.params.userId)]}
 
-    res.send(user);
-  });
+  res.send(user);
+});
 
+app.delete('/user/:id', (req, res) => {
+  const index = users.indexOf(Number(req.params.id));
+
+  if(index < 0){
+    return res.sendStatus(204);
+  }
+
+  const userDeleted = users.splice(index, 1)[0];
+
+  return res.status(202).json({id: userDeleted});
+});
   
 app.listen(3000, () => (console.log('Listening')));
